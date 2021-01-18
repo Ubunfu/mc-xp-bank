@@ -1,0 +1,18 @@
+@startuml sequence_get-balance
+
+title Sequence: Get XP Balance
+
+collections McSteve
+collections McXpBankTeller
+database XpAccounts
+
+McSteve -> McXpBankTeller: GET /bank/balance (userId)
+McXpBankTeller -> XpAccounts: get(userId)
+alt userId found
+    McXpBankTeller <-- XpAccounts: (userId, balance)
+    McSteve <-- McXpBankTeller: HTTP 200
+else userId not found
+    McXpBankTeller <-- XpAccounts: (empty)
+    McSteve <-- McXpBankTeller: HTTP 404
+end
+@enduml

@@ -1,0 +1,47 @@
+@startuml sequence_withdraw
+
+title Sequence: Withdraw XP
+
+collections McSteve
+collections McXpBankWithdrawApprover
+database XpAccounts
+queue McXpBankWithdrawApproved
+collections McXpBankWithdrawExecutor
+collections DiscordAPI
+collections GameServer
+
+McSteve -> McXpBankWithdrawApprover: POST /bank/withdraw (userId, amount)
+alt non-positive amount
+    McSteve <-- McXpBankWithdrawApprover: HTTP 400
+end
+
+' Withdraw Approver App
+McXpBankWithdrawApprover -> XpAccounts: get(userId)
+alt userId found
+    McXpBankWithdrawApprover <-- XpAccounts: (userId, balance)
+    alt sufficient funds
+        McXpBankWithdrawApprover -> XpAccounts: put(userId, balance-amount)
+        McXpBankWithdrawApprover -> McXpBankWithdrawApproved: sendMessage(userId, amount, msgGroupId)
+        McSteve <-- McXpBankWithdrawApprover: HTTP 202
+    else insufficient funds
+        McSteve <-- McXpBankWithdrawApprover: HTTP 403
+    end
+else userId not found
+    McXpBankWithdrawApprover <-- XpAccounts: (empty)
+    McSteve <-- McXpBankWithdrawApprover: HTTP 404
+end
+
+' Withdraw Approver App
+McXpBankWithdrawApproved --> McXpBankWithdrawExecutor: receiveMessage(userId, amount)
+McXpBankWithdrawExecutor -> GameServer: rcon(givePlayerXpInPoints(userId, amount))
+alt command successful
+    McXpBankWithdrawExecutor <-- GameServer: Success Response
+    McXpBankWithdrawExecutor -> XpAccounts: update(userId, amount)
+    McXpBankWithdrawExecutor -> McXpBankWithdrawApproved: deleteMessage(ReceiptHandle)
+    McXpBankWithdrawExecutor -> DiscordAPI: POST to Webhook: Txn Complete
+else command failed
+    McXpBankWithdrawExecutor <-- GameServer: ERROR
+    McXpBankWithdrawExecutor -> McXpBankWithdrawExecutor: Log Error
+end
+
+@enduml

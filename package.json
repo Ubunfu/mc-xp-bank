@@ -1,0 +1,35 @@
+{
+  "name": "mc-xp-bank",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.828.0",
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "sinon": "^9.2.3"
+  },
+  "scripts": {
+    "test": "nyc mocha --recursive test/",
+    "report-coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ubunfu/mc-xp-bank.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ubunfu/mc-xp-bank/issues"
+  },
+  "homepage": "https://github.com/Ubunfu/mc-xp-bank#readme"
+}

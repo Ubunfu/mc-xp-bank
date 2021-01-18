@@ -1,0 +1,137 @@
+openapi: 3.0.1
+info:
+  title: mc-xp-bank
+  version: 1.0.0
+externalDocs:
+  description: View on GitHub
+  url: https://github.com/Ubunfu/mc-xp-bank
+tags:
+- name: xp-bank
+  description: XP Bank Operation
+paths:
+  /bank/deposit:
+    post:
+      tags:
+        - xp-bank
+      summary: Deposit user XP into the bank
+      operationId: depositXp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+      responses:
+        202:
+          description: Accepted
+        400:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+  /bank/withdraw:
+    post:
+      tags:
+        - xp-bank
+      summary: Withdraw user XP from the bank
+      operationId: withdrawXp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        202:
+          description: Accepted
+        400:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        403:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+  /bank/balance:
+    get:
+      tags:
+        - xp-bank
+      summary: Check user XP balance
+      operationId: xpBalance
+      parameters:
+        - name: userId
+          in: query
+          description: URL-encoded user ID of an account holder
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BalanceResp'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+components:
+  schemas:
+    BalanceResp:
+      type: object
+      properties:
+        userId:
+          type: string
+        balance:
+          type: integer
+    DepositRequest:
+      type: object
+      properties:
+        userId: 
+          type: string
+        amount:
+          type: integer
+    WithdrawRequest:
+      type: object
+      properties:
+        userId: 
+          type: string
+        amount:
+          type: integer
+    ErrorResp:
+      type: object
+      properties:
+        error:
+          type: string
+        errorDetail:
+          type: string
