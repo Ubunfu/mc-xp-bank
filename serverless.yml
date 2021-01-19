@@ -45,7 +45,7 @@ functions:
     events:
       - sqs:
           arn:
-            Fn:GetAtt:
+            Fn::GetAtt:
               - QueueWithdrawApproved
               - Arn
 
