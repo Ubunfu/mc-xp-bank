@@ -10,7 +10,7 @@ queue McXpBankDepositApproved
 collections McXpBankDepositExecutor
 database XpAccounts
 
-McSteve -> McXpBankDepositApprover: POST /bank/deposit (userId, amount)
+McSteve -> McXpBankDepositApprover: POST /xp/deposit (userId, amount)
 alt non-positive amount
     McSteve <-- McXpBankDepositApprover: HTTP 400
 end

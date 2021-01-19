@@ -1,0 +1,36 @@
+@startuml sequence_withdraw_direct
+
+title Sequence: Withdraw XP
+
+collections McSteve
+collections McXpBankTeller
+database XpAccounts
+collections GameServer
+
+McSteve -> McXpBankTeller: POST /xp/withdraw (userId, amount)
+alt non-positive amount
+    McSteve <-- McXpBankTeller: HTTP 400
+end
+
+' Withdraw Approver App
+McXpBankTeller -> XpAccounts: get(userId)
+alt userId found
+    McXpBankTeller <-- XpAccounts: (userId, balance)
+    McXpBankTeller -> McXpBankTeller: balance >= amount?
+    alt sufficient funds
+        McXpBankTeller -> GameServer: rcon(addXpInPoints(amount))
+        alt command successful
+            McXpBankTeller -> XpAccounts: put(userId, balance-amount)
+            McSteve <-- McXpBankTeller: HTTP 200
+        else command failure
+            McSteve <-- McXpBankTeller: HTTP 500
+        end
+    else insufficient funds
+        McSteve <-- McXpBankTeller: HTTP 403
+    end
+else userId not found
+    McXpBankTeller <-- XpAccounts: (empty)
+    McSteve <-- McXpBankTeller: HTTP 404
+end
+
+@enduml

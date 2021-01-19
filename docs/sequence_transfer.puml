@@ -1,0 +1,29 @@
+@startuml sequence_transfer
+
+title Sequence: Transfer XP
+
+collections McSteve
+collections McXpBankTeller
+database XpAccounts
+
+McSteve -> McXpBankTeller: POST /xp/transfer (payerUserId, payeeUserId, amount)
+alt non-positive amount
+    McSteve <-- McXpBankTeller: HTTP 400
+end
+
+McXpBankTeller -> XpAccounts: get(payerUserID)
+alt payerUserId found
+    McXpBankTeller <-- XpAccounts: (payerUserID, balance)
+    McXpBankTeller -> McXpBankTeller: balance >= amount?
+    alt payer has sufficient funds
+        McXpBankTeller -> XpAccounts: update(payerUserId, decrement(amount))
+        McXpBankTeller -> XpAccounts: update(payeeUserId, increment(amount))
+        McSteve <-- McXpBankTeller: HTTP 200
+    else payer has insufficient funds
+        McSteve <-- McXpBankTeller: HTTP 403
+    end
+else payerUserId not found
+    McXpBankTeller <-- XpAccounts: (empty)
+    McSteve <-- McXpBankTeller: HTTP 404
+end
+@enduml

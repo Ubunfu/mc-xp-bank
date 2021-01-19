@@ -1,0 +1,72 @@
+
+app: mc-xp-bank
+org: ryanallen
+
+service: mc-xp-bank
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  role: arn:aws:iam::425071954352:role/service-role/mc-microservice-role
+  environment:
+    LOGGER_ENABLED: true
+
+functions:
+  mc-xp-bank-teller:
+    handler: src/mc-xp-bank-teller/index.handler
+    events:
+      - httpApi:
+          path: /xp/balance
+          method: get
+  mc-xp-bank-deposit-approver:
+    handler: src/mc-xp-bank-deposit-approver/index.handler
+    events:
+      - httpApi:
+          path: /xp/deposit
+          method: post
+  mc-xp-bank-deposit-executor:
+    handler: src/mc-xp-bank-deposit-executor/index.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - QueueDepositApproved
+              - Arn
+    environment:
+      QUEUE_URL_DEPOSIT_APPROVED:
+        Ref:
+          - QueueDepositApproved
+  mc-xp-bank-withdraw-approver:
+    handler: src/mc-xp-bank-withdraw-approver/index.handler
+    events:
+      - httpApi:
+          path: /xp/withdraw
+          method: post
+  mc-xp-bank-withdraw-executor:
+    handler: src/mc-xp-bank-withdraw-executor/index.handler
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - QueueWithdrawApproved
+              - Arn
+    environment:
+      QUEUE_URL_WITHDRAW_APPROVED:
+        Ref:
+          - QueueWithdrawApproved
+
+resources:
+  Resources:
+    QueueDepositApproved:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        FifoQueue: true
+        ContentBasedDeduplication: true
+    QueueWithdrawApproved:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        FifoQueue: true
+        ContentBasedDeduplication: true

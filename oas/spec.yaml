@@ -9,58 +9,26 @@ tags:
 - name: xp-bank
   description: XP Bank Operation
 paths:
-  /bank/deposit:
-    post:
+  /xp/query:
+    get:
       tags:
         - xp-bank
-      summary: Deposit user XP into the bank
-      operationId: depositXp
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DepositRequest'
+      summary: Query XP held by a logged-in player
+      operationId: queryXp
+      parameters:
+        - name: userId
+          in: query
+          description: URL-encoded user ID of an account holder
+          required: true
+          schema:
+            type: string
       responses:
-        202:
-          description: Accepted
-        400:
-          description: Not Found
+        200:
+          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResp'
-        500:
-          description: Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResp'
-  /bank/withdraw:
-    post:
-      tags:
-        - xp-bank
-      summary: Withdraw user XP from the bank
-      operationId: withdrawXp
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WithdrawRequest'
-      responses:
-        202:
-          description: Accepted
-        400:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResp'
-        403:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResp'
+                $ref: '#/components/schemas/QueryResp'
         404:
           description: Not Found
           content:
@@ -73,7 +41,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResp'
-  /bank/balance:
+  /xp/balance:
     get:
       tags:
         - xp-bank
@@ -105,14 +73,138 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResp'
+  /xp/deposit:
+    post:
+      tags:
+        - xp-bank
+      summary: Deposit user XP into the bank
+      operationId: depositXp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepositRequest'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+  /xp/withdraw:
+    post:
+      tags:
+        - xp-bank
+      summary: Withdraw user XP from the bank
+      operationId: withdrawXp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        403:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+  /xp/transfer:
+    post:
+      tags:
+        - xp-bank
+      summary: Transfer XP between bank accounts
+      operationId: transferXp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
+        500:
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResp'
 components:
   schemas:
+    QueryResp:
+      type: object
+      properties:
+        userId:
+          type: string
+        amount:
+          type: integer
     BalanceResp:
       type: object
       properties:
         userId:
           type: string
         balance:
+          type: integer
+    TransferRequest:
+      type: object
+      properties:
+        payerUserId:
+          type: string
+        payeeUserId:
+          type: string
+        amount:
           type: integer
     DepositRequest:
       type: object

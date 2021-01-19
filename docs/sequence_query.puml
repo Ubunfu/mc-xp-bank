@@ -1,0 +1,22 @@
+@startuml sequence_query
+
+title Sequence: Query Player XP
+
+collections McSteve
+collections McXpBankTeller
+collections GameServer
+
+McSteve -> McXpBankTeller: GET /xp/query (userId)
+McXpBankTeller -> GameServer: rcon(queryXpInLevels)
+McXpBankTeller -> GameServer: rcon(queryXpInPoints)
+alt commands successful
+    McXpBankTeller -> McXpBankTeller: calculateTotalXpInPoints(levels, points)
+    McSteve <-- McXpBankTeller: HTTP 200
+else user not found
+    McSteve <-- McXpBankTeller: HTTP 404
+else commands failed
+    McXpBankTeller <-- GameServer: (empty)
+    McSteve <-- McXpBankTeller: HTTP 500
+end
+
+@enduml

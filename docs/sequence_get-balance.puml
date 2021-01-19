@@ -6,7 +6,7 @@ collections McSteve
 collections McXpBankTeller
 database XpAccounts
 
-McSteve -> McXpBankTeller: GET /bank/balance (userId)
+McSteve -> McXpBankTeller: GET /xp/balance (userId)
 McXpBankTeller -> XpAccounts: get(userId)
 alt userId found
     McXpBankTeller <-- XpAccounts: (userId, balance)

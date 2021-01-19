@@ -10,7 +10,7 @@ collections McXpBankWithdrawExecutor
 collections DiscordAPI
 collections GameServer
 
-McSteve -> McXpBankWithdrawApprover: POST /bank/withdraw (userId, amount)
+McSteve -> McXpBankWithdrawApprover: POST /xp/withdraw (userId, amount)
 alt non-positive amount
     McSteve <-- McXpBankWithdrawApprover: HTTP 400
 end
