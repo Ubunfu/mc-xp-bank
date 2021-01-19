@@ -34,6 +34,10 @@ functions:
             Fn::GetAtt:
               - QueueDepositApproved
               - Arn
+    environment:
+      QUEUE_URL_DEPOSIT_APPROVED:
+        Ref:
+          - QueueDepositApproved
   mc-xp-bank-withdraw-approver:
     handler: src/mc-xp-bank-withdraw-approver/index.handler
     events:
@@ -48,18 +52,20 @@ functions:
             Fn::GetAtt:
               - QueueWithdrawApproved
               - Arn
+    environment:
+      QUEUE_URL_WITHDRAW_APPROVED:
+        Ref:
+          - QueueWithdrawApproved
 
 resources:
   Resources:
     QueueDepositApproved:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: "mc-xp-bank-deposit-approved.fifo"
         FifoQueue: true
         ContentBasedDeduplication: true
     QueueWithdrawApproved:
       Type: "AWS::SQS::Queue"
       Properties:
-        QueueName: "mc-xp-bank-withdraw-approved.fifo"
         FifoQueue: true
         ContentBasedDeduplication: true
