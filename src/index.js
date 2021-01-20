@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { log } = require('../util/logger.js');
+const { log } = require('./util/logger.js');
+const queryHandler = require('./handlers/queryHandler.js')
+const errorHandler = require('./handlers/errorHandler.js')
 
 exports.handler = async (event, context) => {
     logEvent(event);
@@ -10,10 +12,14 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json',
     };
 
-    if (event.requestContext.routeKey == 'GET /bank/balance') {
-        
-        // something
-
+    if (event.requestContext.routeKey == 'GET /xp/query') {
+        try {
+            body = await queryHandler.handle(event)
+        } catch (err) {
+            const errorHandlerResp = errorHandler.handle(err)
+            statusCode = errorHandlerResp.statusCode;
+            body = errorHandlerResp.body;
+        }
     } else {
         statusCode = '404'
     }
