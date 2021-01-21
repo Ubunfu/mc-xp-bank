@@ -4,7 +4,7 @@ const logger = require('../util/logger.js')
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
 
 async function queryXpLevels(rconClient, userId) {
-    const cmdString = 'xp query ${userId} levels'
+    const cmdString = `xp query ${userId} levels`
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     const levels = await parseQueryResp(serverResp)
@@ -13,7 +13,7 @@ async function queryXpLevels(rconClient, userId) {
 }
 
 async function queryXpPoints(rconClient, userId) {
-    const cmdString = 'xp query ${userId} points'
+    const cmdString = `xp query ${userId} points`
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     const points = await parseQueryResp(serverResp)
