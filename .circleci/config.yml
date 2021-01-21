@@ -57,6 +57,9 @@ workflows:
     jobs:
       - build-and-test
       - deploy-dev:
+          context: 
+            - craftonomy-dev
+            - mc-xp-bank-dev
           requires:
             - build-and-test
           filters:
@@ -64,6 +67,9 @@ workflows:
               only:
                 - develop
       - deploy-prod:
+          context: 
+            - craftonomy-dev
+            - mc-xp-bank-dev
           requires:
             - build-and-test
           filters:
