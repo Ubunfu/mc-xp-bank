@@ -6,7 +6,7 @@ const logger = require('../util/logger.js')
 const rconClient = new RCON({
     host: process.env.SERVER_HOST,
     port: process.env.SERVER_RCON_PORT,
-    timeout: process.env.SERVER_RCON_TIMEOUT_MS 
+    timeout: parseInt(process.env.SERVER_RCON_TIMEOUT_MS)
 });
 
 async function handle(event) {
