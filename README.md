@@ -19,3 +19,4 @@ This service runs as an AWS lambda function.
 | SERVER_RCON_PORT   | Port on which RCON service is listening on the minecraft server.                  | n/a     | Yes       |
 | SERVER_RCON_PASS   | Password used to authenticate with the RCON service.                              | n/a     | Yes       |
 | SERVER_RCON_TIMEOUT_MS   | Timeout in milliseconds for connections to the RCON service.                | n/a     | Yes       |
+| TABLE_XP           | Name of the DynamoDB table containing XP account balances.                        | n/a     | Yes       |
