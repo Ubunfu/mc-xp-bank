@@ -13,10 +13,10 @@ async function handle(err) {
 
 async function mapStatusCode(err) {
     if (err.message == rconServiceErrorEnum.NO_PLAYER_FOUND) {
-        logger.log(`[queryErrorHandler] Mapping error '${error.message}' to HTTP 404`)
+        logger.log(`[queryErrorHandler] Mapping error '${err.message}' to HTTP 404`)
         return '404'
     } else {
-        logger.log(`[queryErrorHandler] Mapping error '${error.message}' to HTTP 500`)
+        logger.log(`[queryErrorHandler] Mapping error '${err.message}' to HTTP 500`)
         return '500'
     }
 }
