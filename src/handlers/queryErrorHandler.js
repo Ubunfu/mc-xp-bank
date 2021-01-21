@@ -2,8 +2,9 @@ const rconServiceErrorEnum = require('../enums/rconServiceErrorEnum.js')
 const logger = require('../util/logger.js')
 
 async function handle(err) {
+    const mappedStatusCode = await mapStatusCode(err)
     return {
-        statusCode: await mapStatusCode(err),
+        statusCode: mappedStatusCode,
         body: {
             error: 'Failed to query player XP',
             errorDetail: err.message

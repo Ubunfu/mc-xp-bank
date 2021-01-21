@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
         try {
             body = await queryHandler.handle(event)
         } catch (err) {
-            const errorHandlerResp = queryErrorHandler.handle(err)
+            const errorHandlerResp = await queryErrorHandler.handle(err)
             statusCode = errorHandlerResp.statusCode;
             body = errorHandlerResp.body;
         }
