@@ -1,0 +1,1 @@
+exports.NON_NUMBER_INPUT = 'xp calculator inputs must be numerical'

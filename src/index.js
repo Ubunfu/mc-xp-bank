@@ -1,7 +1,7 @@
 require('dotenv').config();
 const { log } = require('./util/logger.js');
 const queryHandler = require('./handlers/queryHandler.js')
-const errorHandler = require('./handlers/errorHandler.js')
+const queryErrorHandler = require('./handlers/queryErrorHandler.js')
 
 exports.handler = async (event, context) => {
     logEvent(event);
@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
         try {
             body = await queryHandler.handle(event)
         } catch (err) {
-            const errorHandlerResp = errorHandler.handle(err)
+            const errorHandlerResp = queryErrorHandler.handle(err)
             statusCode = errorHandlerResp.statusCode;
             body = errorHandlerResp.body;
         }

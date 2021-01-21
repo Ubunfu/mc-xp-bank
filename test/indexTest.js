@@ -2,7 +2,7 @@ const queryHandler = require('../src/handlers/queryHandler.js')
 const index = require('../src/index.js')
 const sinon = require('sinon')
 const expect = require('chai').expect
-const errorHandler = require('../src/handlers/errorHandler.js');
+const queryErrorHandler = require('../src/handlers/queryErrorHandler.js');
 
 const EVENT_QUERY = {
     requestContext: {
@@ -44,7 +44,7 @@ describe('Index: When query event is received', function() {
         it('Returns error handler mapped response', async function() {
             const queryControllerMock = sinon.stub(queryHandler, "handle")
                 .throws()
-            const errorHandlerMock = sinon.stub(errorHandler, "handle")
+            const errorHandlerMock = sinon.stub(queryErrorHandler, "handle")
                 .returns(ERROR_HANDLER_RESP)
             const indexResp = await index.handler(EVENT_QUERY)
             expect(indexResp.statusCode).to.be.equal(ERROR_HANDLER_RESP.statusCode)
