@@ -13,7 +13,8 @@ describe('rconService: queryXpPoints:', function() {
         it('Throws NO_PLAYER_FOUND error', async function() {
             const rconClientMock = {
                 authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(rconServiceErrorEnum.NO_PLAYER_FOUND)
+                execute: sinon.stub().returns(rconServiceErrorEnum.NO_PLAYER_FOUND),
+                disconnect: sinon.stub().returns()
             }
             try {
                 await rconService.queryXpPoints(rconClientMock, USER_ID)
@@ -27,7 +28,8 @@ describe('rconService: queryXpPoints:', function() {
         it('Throws RCON_FAILED error', async function() {
             const rconClientMock = {
                 authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_UNEXPECTED)
+                execute: sinon.stub().returns(RESP_UNEXPECTED),
+                disconnect: sinon.stub().returns()
             }
             try {
                 await rconService.queryXpPoints(rconClientMock, USER_ID)
@@ -41,7 +43,8 @@ describe('rconService: queryXpPoints:', function() {
         it('Returns player points count', async function() {
             const rconClientMock = {
                 authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_QUERY_POINTS)
+                execute: sinon.stub().returns(RESP_QUERY_POINTS),
+                disconnect: sinon.stub().returns()
             }
             const rconServiceResp = await rconService.queryXpPoints(rconClientMock, USER_ID)
             expect(rconServiceResp).to.be.equal(10)
@@ -54,7 +57,8 @@ describe('rconService: queryXpLevels:', function() {
         it('Throws NO_PLAYER_FOUND error', async function() {
             const rconClientMock = {
                 authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(rconServiceErrorEnum.NO_PLAYER_FOUND)
+                execute: sinon.stub().returns(rconServiceErrorEnum.NO_PLAYER_FOUND),
+                disconnect: sinon.stub().returns()
             }
             try {
                 await rconService.queryXpLevels(rconClientMock, USER_ID)
@@ -68,7 +72,8 @@ describe('rconService: queryXpLevels:', function() {
         it('Returns player levels count', async function() {
             const rconClientMock = {
                 authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_QUERY_LEVELS)
+                execute: sinon.stub().returns(RESP_QUERY_LEVELS),
+                disconnect: sinon.stub().returns()
             }
             const rconServiceResp = await rconService.queryXpLevels(rconClientMock, USER_ID)
             expect(rconServiceResp).to.be.equal(10)
