@@ -1,48 +1,36 @@
-@startuml sequence_deposit
+@startuml sequence_deposit_direct
 
 title Sequence: Deposit XP
 
 collections McSteve
-collections McXpBankDepositApprover
-collections DiscordAPI
-collections GameServer
-queue McXpBankDepositApproved
-collections McXpBankDepositExecutor
+collections McXpBankTeller
 database XpAccounts
+collections GameServer
 
-McSteve -> McXpBankDepositApprover: POST /xp/deposit (userId, amount)
+McSteve -> McXpBankTeller: POST /xp/deposit (userId, amount)
 alt non-positive amount
-    McSteve <-- McXpBankDepositApprover: HTTP 400
+    McSteve <-- McXpBankTeller: HTTP 400
 end
-McSteve <-- McXpBankDepositApprover: HTTP 202
 
-' Deposit Approver App
-McXpBankDepositApprover -> GameServer: rcon(queryXpInLevels(userId))
-alt command success
-    McXpBankDepositApprover <-- GameServer: currentLevels
-    McXpBankDepositApprover -> McXpBankDepositApprover: convertToPoints(currentLevels)
+McXpBankTeller -> GameServer: rcon(queryXpInLevels(userId))
+McXpBankTeller -> GameServer: rcon(queryXpInPoints(userId))
+alt commands success
+    McXpBankTeller <-- GameServer: Success Responses
+    McXpBankTeller -> McXpBankTeller: calculateXpInPoints(levels, points)
     alt player has enough XP
-        McXpBankDepositApprover -> McXpBankDepositApproved: sendMessage(userId, amount, msgGroupID)
-        McXpBankDepositApprover -> DiscordAPI: POST to Webhook: Txn Approved
+        McXpBankTeller -> GameServer: rcon(xpRemoveInPoints(userId, amount))
+        alt command success
+            McXpBankTeller <-- GameServer: Success Response
+            McXpBankTeller -> XpAccounts: update(userId, increment(amount))
+            McSteve <-- McXpBankTeller: HTTP 200
+        else command failure
+            McSteve <-- McXpBankTeller: HTTP 500
+        end
     else player has insufficient XP
-        McXpBankDepositApprover -> DiscordAPI: POST to Webhook: Insufficient Funds
+        McSteve <-- McXpBankTeller: HTTP 403
     end
-else command failure
-    McXpBankDepositApprover -> DiscordAPI: POST to Webhook: Error querying player XP
-end
-
-' Deposit Executor App
-McXpBankDepositApproved --> McXpBankDepositExecutor: receiveEvent(userId, amount)
-McXpBankDepositExecutor -> GameServer: rcon(removeXpInPoints(userId, amount))
-
-alt command success
-    McXpBankDepositExecutor <-- GameServer: Success Response
-    McXpBankDepositExecutor -> XpAccounts: update(userId, incrment(amount))
-    McXpBankDepositExecutor -> McXpBankDepositApproved: deleteMessage(ReceiptHandle)
-    McXpBankDepositExecutor -> DiscordAPI: POST to Webhook: Txn Complete
-else command failure
-    McXpBankDepositExecutor <-- GameServer: ERROR
-    McXpBankDepositExecutor -> McXpBankDepositExecutor: Log Error
+else commands failure
+    McXpBankTeller -> McSteve: HTTP 500
 end
 
 @enduml
