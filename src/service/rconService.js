@@ -7,6 +7,7 @@ async function queryXpLevels(rconClient, userId) {
     const cmdString = `xp query ${userId} levels`
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
+    rconClient.disconnect()
     const levels = await parseQueryResp(serverResp)
     logger.log(`[rconService] User ${userId} has ${levels} levels`)
     return levels
@@ -16,6 +17,7 @@ async function queryXpPoints(rconClient, userId) {
     const cmdString = `xp query ${userId} points`
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
+    rconClient.disconnect()
     const points = await parseQueryResp(serverResp)
     logger.log(`[rconService] User ${userId} has ${points} points`)
     return points
