@@ -23,6 +23,22 @@ async function queryXpPoints(rconClient, userId) {
     return points
 }
 
+async function removeXpPoints(rconClient, userId, amount) {
+    const cmdString = `xp add ${userId} -${amount} points`
+    await rconClient.authenticate(SERVER_RCON_PASS)
+    const serverResp = await rconClient.execute(cmdString)
+    rconClient.disconnect()
+    await parseRemoveXpPointsResp(serverResp)
+}
+
+async function addXpPoints(rconClient, userId, amount) {
+    const cmdString = `xp add ${userId} ${amount} points`
+    await rconClient.authenticate(SERVER_RCON_PASS)
+    const serverResp = await rconClient.execute(cmdString)
+    rconClient.disconnect()
+    await parseAddXpPointsResp(serverResp)
+}
+
 async function parseQueryResp(serverResponse) {
     if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
         logger.log('[rconService] ' + serverResponse)
@@ -35,5 +51,21 @@ async function parseQueryResp(serverResponse) {
     }
 }
 
+async function parseRemoveXpPointsResp(serverResponse) {
+    if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
+        logger.log('[rconService] ' + serverResponse)
+        throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
+    }
+}
+
+async function parseAddXpPointsResp(serverResponse) {
+    if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
+        logger.log('[rconService] ' + serverResponse)
+        throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
+    }
+}
+
 exports.queryXpLevels = queryXpLevels
 exports.queryXpPoints = queryXpPoints
+exports.removeXpPoints = removeXpPoints
+exports.addXpPoints = addXpPoints

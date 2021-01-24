@@ -1,0 +1,1 @@
+exports.INVALID_REQUEST_MISSING_USER_ID = 'invalid request: userId is required'

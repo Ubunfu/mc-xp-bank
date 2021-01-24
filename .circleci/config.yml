@@ -66,10 +66,12 @@ workflows:
             branches:
               only:
                 - develop
+                - /feature\/.*/
+                - /bugfix\/.*/
       - deploy-prod:
           context: 
-            - craftonomy-dev
-            - mc-xp-bank-dev
+            - craftonomy-prod
+            - mc-xp-bank-prod
           requires:
             - build-and-test
           filters:
