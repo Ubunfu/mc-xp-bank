@@ -1,8 +1,10 @@
-const queryHandler = require('../src/handlers/queryHandler.js')
-const index = require('../src/index.js')
 const sinon = require('sinon')
 const expect = require('chai').expect
+const index = require('../src/index.js')
+const queryHandler = require('../src/handlers/queryHandler.js')
 const queryErrorHandler = require('../src/handlers/queryErrorHandler.js');
+const depositHandler = require('../src/handlers/depositHandler.js')
+const depositErrorHandler = require('../src/handlers/depositErrorHandler.js');
 
 const EVENT_QUERY = {
     requestContext: {
@@ -11,6 +13,13 @@ const EVENT_QUERY = {
     queryStringParameters: {
         userId: 'player'
     }
+}
+
+const EVENT_DEPOSIT = {
+    requestContext: {
+        routeKey: 'POST /xp/deposit'
+    },
+    body: '{"userId": "player", "amount": "100"}'
 }
 
 const EVENT_INVALID_PATH = {
@@ -29,27 +38,52 @@ const ERROR_HANDLER_RESP = {
     body: {}
 }
 
-describe('Index: When query event is received', function() {
-    describe('When query controller returns successfully', function() {
+describe('Index: When deposit event is received', function() {
+    describe('When deposit handler returns successfully', function() {
         it('Returns HTTP 200', async function() {
-            const queryControllerMock = sinon.stub(queryHandler, "handle")
+            const depositHandlerMock = sinon.stub(depositHandler, "handle")
+                .returns()
+            const indexResp = await index.handler(EVENT_DEPOSIT)
+            expect(indexResp.statusCode).to.be.equal('200')
+            depositHandlerMock.restore()
+        })
+    })
+    describe('When deposit handler throws an error', function() {
+        it('Returns error handler mapped response', async function() {
+            const depositHandlerMock = sinon.stub(depositHandler, "handle")
+                .throws()
+            const errorHandlerMock = sinon.stub(depositErrorHandler, "handle")
+                .returns(ERROR_HANDLER_RESP)
+            const indexResp = await index.handler(EVENT_DEPOSIT)
+            expect(indexResp.statusCode).to.be.equal(ERROR_HANDLER_RESP.statusCode)
+            expect(JSON.parse(indexResp.body)).to.be.deep.equal(ERROR_HANDLER_RESP.body)
+            depositHandlerMock.restore()
+            errorHandlerMock.restore()
+        })
+    })
+})
+
+describe('Index: When query event is received', function() {
+    describe('When query handler returns successfully', function() {
+        it('Returns HTTP 200', async function() {
+            const queryHandlerMock = sinon.stub(queryHandler, "handle")
                 .returns(QUERY_HANDLER_RESP_200)
             const indexResp = await index.handler(EVENT_QUERY)
             expect(JSON.parse(indexResp.body)).to.be.deep.equal(QUERY_HANDLER_RESP_200)
             expect(indexResp.statusCode).to.be.equal('200')
-            queryControllerMock.restore()
+            queryHandlerMock.restore()
         })
     })
-    describe('When query controller throws an error', function() {
+    describe('When query handler throws an error', function() {
         it('Returns error handler mapped response', async function() {
-            const queryControllerMock = sinon.stub(queryHandler, "handle")
+            const queryHandlerMock = sinon.stub(queryHandler, "handle")
                 .throws()
             const errorHandlerMock = sinon.stub(queryErrorHandler, "handle")
                 .returns(ERROR_HANDLER_RESP)
             const indexResp = await index.handler(EVENT_QUERY)
             expect(indexResp.statusCode).to.be.equal(ERROR_HANDLER_RESP.statusCode)
             expect(JSON.parse(indexResp.body)).to.be.deep.equal(ERROR_HANDLER_RESP.body)
-            queryControllerMock.restore()
+            queryHandlerMock.restore()
             errorHandlerMock.restore()
         })
     })

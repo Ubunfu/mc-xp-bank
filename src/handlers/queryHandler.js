@@ -12,11 +12,7 @@ const rconClient = new RCON({
 async function handle(event) {
 
     const userId = event.queryStringParameters.userId
-    logger.log(`[queryHandler] Querying XP for ${userId}`)
-
-    const playerLevels = await rconService.queryXpLevels(rconClient, userId)
-    const playerPoints = await rconService.queryXpPoints(rconClient, userId)
-    const totalXpPoints = await xpCalculatorService.calculatePoints(playerLevels, playerPoints)
+    const totalXpPoints = await getPlayerXp(userId)
     
     return {
         userId: userId,
@@ -24,4 +20,13 @@ async function handle(event) {
     }
 }
 
+async function getPlayerXp(userId) {
+    logger.log(`[queryHandler] Querying XP for ${userId}`)
+    const playerLevels = await rconService.queryXpLevels(rconClient, userId)
+    const playerPoints = await rconService.queryXpPoints(rconClient, userId)
+    return await xpCalculatorService.calculatePoints(playerLevels, playerPoints)
+    
+}
+
 exports.handle = handle;
+exports.getPlayerXp = getPlayerXp

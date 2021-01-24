@@ -1,0 +1,1 @@
+exports.QUERY_FAILED = 'failed to query xp database'
