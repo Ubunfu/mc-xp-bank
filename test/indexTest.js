@@ -2,9 +2,11 @@ const sinon = require('sinon')
 const expect = require('chai').expect
 const index = require('../src/index.js')
 const queryHandler = require('../src/handlers/queryHandler.js')
-const queryErrorHandler = require('../src/handlers/queryErrorHandler.js');
+const queryErrorHandler = require('../src/handlers/queryErrorHandler.js')
 const depositHandler = require('../src/handlers/depositHandler.js')
-const depositErrorHandler = require('../src/handlers/depositErrorHandler.js');
+const depositErrorHandler = require('../src/handlers/depositErrorHandler.js')
+const balanceHandler = require('../src/handlers/balanceHandler.js')
+const balanceErrorHandler = require('../src/handlers/balanceErrorHandler.js')
 
 const EVENT_QUERY = {
     requestContext: {
@@ -22,6 +24,15 @@ const EVENT_DEPOSIT = {
     body: '{"userId": "player", "amount": "100"}'
 }
 
+const EVENT_BALANCE = {
+    requestContext: {
+        routeKey: 'GET /xp/balance'
+    },
+    queryStringParameters: {
+        userId: 'player'
+    }
+}
+
 const EVENT_INVALID_PATH = {
     requestContext: {
         routeKey: 'GET /invalid/path'
@@ -33,10 +44,41 @@ const QUERY_HANDLER_RESP_200 = {
     amount: 200
 }
 
+const BALANCE_HANDLER_RESP_200 = {
+    userId: 'player',
+    balance: 200
+}
+
 const ERROR_HANDLER_RESP = {
     statusCode: '400',
     body: {}
 }
+
+describe('Index: When balance check event is received', function() {
+    describe('When balance handler returns successfully', function() {
+        it('Returns HTTP 200', async function() {
+            const balanceHandlerMock = sinon.stub(balanceHandler, "handle")
+                .returns(BALANCE_HANDLER_RESP_200)
+            const indexResp = await index.handler(EVENT_BALANCE)
+            expect(indexResp.statusCode).to.be.equal('200')
+            expect(JSON.parse(indexResp.body)).to.be.deep.equal(BALANCE_HANDLER_RESP_200)
+            balanceHandlerMock.restore()
+        })
+    })
+    describe('When balance handler throws an error', function() {
+        it('Returns error handler mapped response', async function() {
+            const balanceHandlerMock = sinon.stub(balanceHandler, "handle")
+                .throws()
+            const balanceErrorHandlerMock = sinon.stub(balanceErrorHandler, "handle")
+                .returns(ERROR_HANDLER_RESP)
+            const indexResp = await index.handler(EVENT_BALANCE)
+            expect(indexResp.statusCode).to.be.deep.equal(ERROR_HANDLER_RESP.statusCode)
+            expect(JSON.parse(indexResp.body)).to.be.deep.equal(ERROR_HANDLER_RESP.body)
+            balanceHandlerMock.restore()
+            balanceErrorHandlerMock.restore()
+        })
+    })
+})
 
 describe('Index: When deposit event is received', function() {
     describe('When deposit handler returns successfully', function() {
