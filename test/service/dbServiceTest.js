@@ -10,6 +10,23 @@ const XP_ACCOUNT = {
     balance: XP_AMOUNT
 }
 
+describe('dbService: remove XP Points', function() {
+    describe('When database query fails', function() {
+        it('Throw query failed error', async function() {
+            const docClientMock = {
+                update: sinon.stub().returnsThis(),
+                promise: sinon.stub().rejects()
+            }
+            try {
+                await dbService.removeXpPoints(docClientMock, USER_ID, XP_AMOUNT)
+                expect(true).to.be.false
+            } catch (err) {
+                expect(err.message).to.be.equal(dbServiceErrorEnum.QUERY_FAILED)
+            }
+        })
+    })
+})
+
 describe('dbService: get balance', function() {
     describe('When db returns an xp account', function() {
         it('Returns the item object', async function() {

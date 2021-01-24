@@ -44,11 +44,10 @@ async function addXpPoints(docClient, userId, amount) {
         await log(`[dbService] Error querying database: ${err}`)
         throw Error(dbServiceErrorEnum.QUERY_FAILED)
     }
-    
 }
 
 async function removeXpPoints(docClient, userId, amount) {
-
+    await addXpPoints(docClient, userId, -amount)
 }
 
 exports.getBalance = getBalance
