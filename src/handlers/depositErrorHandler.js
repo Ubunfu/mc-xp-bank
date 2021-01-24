@@ -1,6 +1,5 @@
 const rconServiceErrorEnum = require('../enums/rconServiceErrorEnum.js')
 const depositHandlerErrorEnum = require('../enums/depositHandlerErrorEnum.js')
-const dbServiceErrorEnum = require('../enums/dbServiceErrorEnum.js')
 
 async function handle(err) {
     const mappedStatusCode = await mapStatusCode(err)
@@ -11,7 +10,6 @@ async function handle(err) {
             errorDetail: err.message
         }
     }
-
 }
 
 async function mapStatusCode(err) {
