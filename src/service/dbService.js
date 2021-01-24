@@ -19,6 +19,7 @@ async function getBalance(docClient, userId) {
         throw Error(dbServiceErrorEnum.QUERY_FAILED)
     }
     if (dbResp.Item == undefined) {
+        await log(`[dbService] XP account not found for user ${userId}`)
         throw Error(dbServiceErrorEnum.ACCOUNT_NOT_FOUND)
     }
     await log(`[dbService] Returned account details: ${JSON.stringify(dbResp.Item)}`)
