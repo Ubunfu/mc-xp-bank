@@ -6,7 +6,7 @@ async function handle(err) {
     return {
         statusCode: mappedStatusCode,
         body: {
-            error: 'Failed to withdraw xp',
+            error: 'Failed to transfer xp',
             errorDetail: err.message
         }
     }
