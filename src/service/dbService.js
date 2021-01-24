@@ -12,7 +12,7 @@ async function getBalance(docClient, userId) {
     }
     let dbResp
     try {
-        await log(`[dbService] DB Query Params: ${params}`)
+        await log(`[dbService] DB Query Params: ${JSON.stringify(params)}`)
         dbResp = await docClient.get(params).promise()
     } catch (err) {
         await log(`[dbService] Error querying database: ${err}`)
@@ -21,6 +21,7 @@ async function getBalance(docClient, userId) {
     if (dbResp.Item == undefined) {
         throw Error(dbServiceErrorEnum.ACCOUNT_NOT_FOUND)
     }
+    await log(`[dbService] Returned account details: ${JSON.stringify(dbResp.Item)}`)
     return dbResp.Item
 }
 
@@ -36,7 +37,7 @@ async function addXpPoints(docClient, userId, amount) {
         UpdateExpression: 'ADD balance :amount'
     }
     try {
-        await log(`[dbService] DB Query Params: ${params}`)
+        await log(`[dbService] DB Query Params: ${JSON.stringify(params)}`)
         await docClient.update(params).promise()
     } catch (err) {
         await log(`[dbService] Error querying database: ${err}`)
