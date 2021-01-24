@@ -7,6 +7,8 @@ const depositHandler = require('../src/handlers/depositHandler.js')
 const depositErrorHandler = require('../src/handlers/depositErrorHandler.js')
 const balanceHandler = require('../src/handlers/balanceHandler.js')
 const balanceErrorHandler = require('../src/handlers/balanceErrorHandler.js')
+const withdrawHandler = require('../src/handlers/withdrawHandler.js')
+const withdrawErrorHandler = require('../src/handlers/withdrawErrorHandler.js')
 
 const EVENT_QUERY = {
     requestContext: {
@@ -33,6 +35,13 @@ const EVENT_BALANCE = {
     }
 }
 
+const EVENT_WITHDRAW = {
+    requestContext: {
+        routeKey: 'POST /xp/withdraw'
+    },
+    body: '{"userId": "player", "amount": "100"}'
+}
+
 const EVENT_INVALID_PATH = {
     requestContext: {
         routeKey: 'GET /invalid/path'
@@ -53,6 +62,31 @@ const ERROR_HANDLER_RESP = {
     statusCode: '400',
     body: {}
 }
+
+describe('Index: When xp withdraw event is received', function() {
+    describe('When withdraw handler returns successfully', function() {
+        it('Returns HTTP 200', async function() {
+            const withdrawHandlerMock = sinon.stub(withdrawHandler, "handle")
+                .returns()
+            const indexResp = await index.handler(EVENT_WITHDRAW)
+            expect(indexResp.statusCode).to.be.equal('200')
+            withdrawHandlerMock.restore()
+        })
+    })
+    describe('When withdraw handler throws an error', function() {
+        it('Returns error handler mapped response', async function() {
+            const withdrawHandlerMock = sinon.stub(withdrawHandler, "handle")
+                .throws()
+            const withdrawErrorHandlerMock = sinon.stub(withdrawErrorHandler, "handle")
+                .returns(ERROR_HANDLER_RESP)
+            const indexResp = await index.handler(EVENT_WITHDRAW)
+            expect(indexResp.statusCode).to.be.deep.equal(ERROR_HANDLER_RESP.statusCode)
+            expect(JSON.parse(indexResp.body)).to.be.deep.equal(ERROR_HANDLER_RESP.body)
+            withdrawHandlerMock.restore()
+            withdrawErrorHandlerMock.restore()
+        })
+    })
+})
 
 describe('Index: When balance check event is received', function() {
     describe('When balance handler returns successfully', function() {
