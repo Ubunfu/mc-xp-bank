@@ -4,9 +4,28 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 
 const USER_ID = 'player'
+const XP_POINTS = 100
 const RESP_QUERY_LEVELS = 'player has 10 experience levels'
 const RESP_QUERY_POINTS = 'player has 10 experience points'
 const RESP_UNEXPECTED = 'some crap'
+
+describe('rconService: removeXpPoints:', function() {
+    describe('When no player is online', function() {
+        it('Throws NO_PLAYER_FOUND error', async function() {
+            const rconClientMock = {
+                authenticate: sinon.stub().returns(),
+                execute: sinon.stub().returns(rconServiceErrorEnum.NO_PLAYER_FOUND),
+                disconnect: sinon.stub().returns()
+            }
+            try {
+                await rconService.removeXpPoints(rconClientMock, USER_ID, XP_POINTS)
+                expect(true).to.be.false
+            } catch (err) {
+                expect(err.message).to.be.equal(rconServiceErrorEnum.NO_PLAYER_FOUND)
+            }
+        })
+    })
+})
 
 describe('rconService: queryXpPoints:', function() {
     describe('When no player is online', function() {
