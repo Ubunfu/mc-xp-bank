@@ -24,7 +24,7 @@ async function queryXpPoints(rconClient, userId) {
 }
 
 async function removeXpPoints(rconClient, userId, amount) {
-    const cmdString = `xp add ${userId} ${amount} points`
+    const cmdString = `xp add ${userId} -${amount} points`
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
