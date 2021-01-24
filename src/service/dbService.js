@@ -5,9 +5,9 @@ const TABLE_XP = process.env.TABLE_XP
 
 async function getBalance(docClient, userId) {
     const params = {
-        TableName: 'wallets',
+        TableName: TABLE_XP,
         Key: {
-            'WalletId': 'testWallet'
+            'userId': userId
         }
     }
     let dbResp
