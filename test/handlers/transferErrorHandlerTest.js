@@ -11,6 +11,13 @@ describe('Transfer Error Handler Test', function() {
             expect(handlerResp.body.errorDetail).to.be.equal(transferHandlerErrorEnum.INVALID_REQUEST)
         })
     })
+    describe('When handling negative amount error', function() {
+        it('Should map to HTTP 400', async function() {
+            const handlerResp = await transferErrorHandler.handle(new Error(transferHandlerErrorEnum.AMOUNT_MUST_BE_POSITIVE))
+            expect(handlerResp.statusCode).to.be.equal('400')
+            expect(handlerResp.body.errorDetail).to.be.equal(transferHandlerErrorEnum.AMOUNT_MUST_BE_POSITIVE)
+        })
+    })
     describe('When handling insufficient xp error', function() {
         it('Should map to HTTP 403', async function() {
             const handlerResp = await transferErrorHandler.handle(new Error(transferHandlerErrorEnum.INSUFFICIENT_XP))

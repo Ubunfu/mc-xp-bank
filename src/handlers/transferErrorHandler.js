@@ -16,6 +16,9 @@ async function mapStatusCode(err) {
     if (err.message == transferHandlerErrorEnum.INVALID_REQUEST) {
         return '400'
     }
+    if (err.message == transferHandlerErrorEnum.AMOUNT_MUST_BE_POSITIVE) {
+        return '400'
+    }
     if (err.message == transferHandlerErrorEnum.INSUFFICIENT_XP) {
         return '403'
     }
