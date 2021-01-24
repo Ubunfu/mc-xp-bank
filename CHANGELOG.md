@@ -5,6 +5,7 @@ This project attempts to conform to [SemVer](https://semver.org/) guidelines whe
 * [Implementing Deposit XP API](https://github.com/Ubunfu/mc-xp-bank/pull/1)
 * [Implementing XP Account Balance API](https://github.com/Ubunfu/mc-xp-bank/pull/2)
 * [Implementing Withdraw XP API](https://github.com/Ubunfu/mc-xp-bank/pull/3)
+* [Implementing Transfer XP API](https://github.com/Ubunfu/mc-xp-bank/pull/4)
 
 ## [v0.1.0]
 * Implementing Query XP API

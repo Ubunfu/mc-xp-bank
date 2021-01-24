@@ -9,6 +9,8 @@ const balanceHandler = require('../src/handlers/balanceHandler.js')
 const balanceErrorHandler = require('../src/handlers/balanceErrorHandler.js')
 const withdrawHandler = require('../src/handlers/withdrawHandler.js')
 const withdrawErrorHandler = require('../src/handlers/withdrawErrorHandler.js')
+const transferHandler = require('../src/handlers/transferHandler.js')
+const transferErrorHandler = require('../src/handlers/transferErrorHandler.js')
 
 const EVENT_QUERY = {
     requestContext: {
@@ -42,6 +44,13 @@ const EVENT_WITHDRAW = {
     body: '{"userId": "player", "amount": "100"}'
 }
 
+const EVENT_TRANSFER = {
+    requestContext: {
+        routeKey: 'POST /xp/transfer'
+    },
+    body: '{"payerUserId": "player", "payeeUserId": "player2", "amount": "100"}'
+}
+
 const EVENT_INVALID_PATH = {
     requestContext: {
         routeKey: 'GET /invalid/path'
@@ -62,6 +71,31 @@ const ERROR_HANDLER_RESP = {
     statusCode: '400',
     body: {}
 }
+
+describe('Index: When transfer XP event is received', function() {
+    describe('When transfer handler returns successfully', function() {
+        it('Returns HTTP 200', async function() {
+            const transferHandlerMock = sinon.stub(transferHandler, "handle")
+                .returns()
+            const indexResp = await index.handler(EVENT_TRANSFER)
+            expect(indexResp.statusCode).to.be.equal('200')
+            transferHandlerMock.restore()
+        })
+    })
+    describe('When transfer handler throws an error', function() {
+        it('Returns error handler mapped response', async function() {
+            const transferHandlerMock = sinon.stub(transferHandler, "handle")
+                .throws()
+            const transferErrorHandlerMock = sinon.stub(transferErrorHandler, "handle")
+                .returns(ERROR_HANDLER_RESP)
+            const indexResp = await index.handler(EVENT_TRANSFER)
+            expect(indexResp.statusCode).to.be.deep.equal(ERROR_HANDLER_RESP.statusCode)
+            expect(JSON.parse(indexResp.body)).to.be.deep.equal(ERROR_HANDLER_RESP.body)
+            transferHandlerMock.restore()
+            transferErrorHandlerMock.restore()
+        })
+    })
+})
 
 describe('Index: When xp withdraw event is received', function() {
     describe('When withdraw handler returns successfully', function() {
