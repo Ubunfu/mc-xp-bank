@@ -15,7 +15,7 @@ const rconClient = new RCON({
 async function handle(event) {
     await validateInput(event)
     const userId = JSON.parse(event.body).userId
-    const amount = JSON.parse(event.body).amount
+    const amount = parseInt(JSON.parse(event.body).amount)
     await logger.log(`[withdrawHandler] User ${userId} requested to withdraw ${amount} xp`)
     const dbResp = await dbService.getBalance(docClient, userId)
     await logger.log(`[withdrawHandler] Retrieved account balance: ${JSON.stringify(dbResp)}`)

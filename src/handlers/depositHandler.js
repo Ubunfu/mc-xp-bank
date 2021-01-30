@@ -16,7 +16,7 @@ const docClient = new AWS.DynamoDB.DocumentClient()
 
 async function handle(event) {
     const userId = JSON.parse(event.body).userId
-    const amount = JSON.parse(event.body).amount
+    const amount = parseInt(JSON.parse(event.body).amount)
     await validateInput(userId, amount)
     await logger.log(`[depositHandler] ${userId} requested a deposit of ${amount} XP`)
     const playerCurrentXp = await queryHandler.getPlayerXp(userId)
