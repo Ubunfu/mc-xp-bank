@@ -8,7 +8,7 @@ async function handle(event) {
     await validateInput(event)
     const payerUserId = JSON.parse(event.body).payerUserId
     const payeeUserId = JSON.parse(event.body).payeeUserId
-    const amount = JSON.parse(event.body).amount
+    const amount = parseInt(JSON.parse(event.body).amount)
     await logger.log(`[transferHandler] ${payerUserId} requested to transfer ${amount} xp to ${payeeUserId}`)
     const payerAccount = await dbService.getBalance(docClient, payerUserId)
     await logger.log(`[transferHandler] Retrieved xp account: ${JSON.stringify(payerAccount)}`)
