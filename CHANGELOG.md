@@ -1,6 +1,9 @@
 # Changelog
 This project attempts to conform to [SemVer](https://semver.org/) guidelines whenever possible.
 
+##[v0.2.1]
+* [Adding type checks on amounts passed into handlers]()
+
 ## [v0.2.0]
 * [Implementing Deposit XP API](https://github.com/Ubunfu/mc-xp-bank/pull/1)
 * [Implementing XP Account Balance API](https://github.com/Ubunfu/mc-xp-bank/pull/2)
