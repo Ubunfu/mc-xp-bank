@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const withdrawHandlerErrorEnum = require('../../src/enums/withdrawHandlerErrorEnum.js')
 const withdrawErrorHandler = require('../../src/handlers/withdrawErrorHandler.js')
 const dbServiceErrorEnum = require('../../src/enums/dbServiceErrorEnum.js')
+const rconServiceErrorEnum = require('../../src/enums/rconServiceErrorEnum.js')
 
 describe('Withdraw Error Handler Test', function() {
     describe('When handling invalid request error', function() {
@@ -23,6 +24,13 @@ describe('Withdraw Error Handler Test', function() {
             const handlerResp = await withdrawErrorHandler.handle(new Error(dbServiceErrorEnum.ACCOUNT_NOT_FOUND))
             expect(handlerResp.statusCode).to.be.equal('404')
             expect(handlerResp.body.errorDetail).to.be.equal(dbServiceErrorEnum.ACCOUNT_NOT_FOUND)
+        })
+    })
+    describe('When handling no player found error', function() {
+        it('Should map to HTTP 404', async function() {
+            const handlerResp = await withdrawErrorHandler.handle(new Error(rconServiceErrorEnum.NO_PLAYER_FOUND))
+            expect(handlerResp.statusCode).to.be.equal('404')
+            expect(handlerResp.body.errorDetail).to.be.equal(rconServiceErrorEnum.NO_PLAYER_FOUND)
         })
     })
     describe('When handling unmapped error', function() {

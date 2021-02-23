@@ -1,5 +1,6 @@
 const withdrawHandlerErrorEnum = require('../enums/withdrawHandlerErrorEnum.js')
 const dbServiceErrorEnum = require('../enums/dbServiceErrorEnum.js')
+const rconServiceErrorEnum = require('../enums/rconServiceErrorEnum')
 
 async function handle(err) {
     const mappedStatusCode = await mapStatusCode(err)
@@ -20,6 +21,9 @@ async function mapStatusCode(err) {
         return '403'
     }
     if (err.message == dbServiceErrorEnum.ACCOUNT_NOT_FOUND) {
+        return '404'
+    }
+    if (err.message == rconServiceErrorEnum.NO_PLAYER_FOUND) {
         return '404'
     }
     return '500'
