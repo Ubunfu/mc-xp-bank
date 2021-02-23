@@ -1,7 +1,11 @@
 # Changelog
 This project attempts to conform to [SemVer](https://semver.org/) guidelines whenever possible.
 
-##[v0.2.1]
+## [v1.0.0]
+* [Adding discord build notifications](https://github.com/Ubunfu/mc-xp-bank/pull/10)
+* [Correcting withdraw API error status. Fixes #9](https://github.com/Ubunfu/mc-xp-bank/pull/11)
+
+## [v0.2.1]
 * [Adding type checks on amounts passed into handlers](https://github.com/Ubunfu/mc-xp-bank/pull/7)
 
 ## [v0.2.0]
