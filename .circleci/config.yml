@@ -74,8 +74,6 @@ workflows:
             branches:
               only:
                 - develop
-                - /feature\/.*/
-                - /bugfix\/.*/
       - deploy-prod:
           context: 
             - craftonomy-prod
