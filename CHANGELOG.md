@@ -2,7 +2,7 @@
 This project attempts to conform to [SemVer](https://semver.org/) guidelines whenever possible.
 
 ## [v1.0.1]
-* [Updating packages and sls config]()
+* [Updating packages and sls config](https://github.com/Ubunfu/mc-xp-bank/pull/13)
 
 ## [v1.0.0]
 * [Adding discord build notifications](https://github.com/Ubunfu/mc-xp-bank/pull/10)
