@@ -5,18 +5,21 @@ service: mc-xp-bank
 
 frameworkVersion: '2'
 
+useDotenv: true
+
 provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
-  role: arn:aws:iam::425071954352:role/service-role/mc-microservice-role
+  iam:
+    role: arn:aws:iam::425071954352:role/service-role/mc-microservice-role
   environment:
     LOGGER_ENABLED: true
     SERVER_HOST: ${env:SERVER_HOST}
     SERVER_RCON_PORT: ${env:SERVER_RCON_PORT}
     SERVER_RCON_PASS: ${env:SERVER_RCON_PASS}
     SERVER_RCON_TIMEOUT_MS: ${env:SERVER_RCON_TIMEOUT_MS}
-    TABLE_XP:
+    TABLE_XP: #${env:TABLE_XP}
       Ref:
         - XpDatabase
 
