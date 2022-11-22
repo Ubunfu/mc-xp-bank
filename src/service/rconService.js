@@ -2,9 +2,15 @@ const rconServiceErrorEnum = require('../enums/rconServiceErrorEnum.js')
 const logger = require('../util/logger.js')
 
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
+const ESSENTIALS_X = process.env.ESSENTIALS_X
 
 async function queryXpLevels(rconClient, userId) {
-    const cmdString = `xp query ${userId} levels`
+    if (ESSENTIALS_X){
+        const cmdString = `xp show ${userId}`
+    } else {
+        const cmdString = `xp query ${userId} levels`
+    }
+
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
@@ -40,6 +46,9 @@ async function addXpPoints(rconClient, userId, amount) {
 }
 
 async function parseQueryResp(serverResponse) {
+    if (ESSENTIALS_X){
+        // Query using regex. Return kk
+    }
     if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
         logger.log('[rconService] ' + serverResponse)
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
