@@ -14,17 +14,31 @@ async function queryXpLevels(rconClient, userId) {
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
-    const levels = await parseQueryResp(serverResp)
+
+    if (ESSENTIALS_X){
+        const levels = await parseEssXQueryLevels(serverResp)
+    } else {
+        const levels = await parseQueryResp(serverResp)
+    }
     logger.log(`[rconService] User ${userId} has ${levels} levels`)
     return levels
 }
 
 async function queryXpPoints(rconClient, userId) {
-    const cmdString = `xp query ${userId} points`
+    if (ESSENTIALS_X){
+        const cmdString = `xp show ${userId}`
+    } else {
+        const cmdString = `xp query ${userId} points`
+    }
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
-    const points = await parseQueryResp(serverResp)
+
+    if (ESSENTIALS_X){
+        const points = await parseEssXQueryPoints(serverResp)
+    } else {
+        const points = await parseQueryResp(serverResp)
+    }
     logger.log(`[rconService] User ${userId} has ${points} points`)
     return points
 }
@@ -46,14 +60,41 @@ async function addXpPoints(rconClient, userId, amount) {
 }
 
 async function parseQueryResp(serverResponse) {
-    if (ESSENTIALS_X){
-        // Query using regex. Return kk
-    }
     if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
         logger.log('[rconService] ' + serverResponse)
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
     } else if (serverResponse.includes('experience')) {
         return parseInt(serverResponse.split(' ')[2])
+    } else {
+        logger.log('[rconService] Unexpected server response: ' + serverResponse)
+        throw Error(rconServiceErrorEnum.RCON_FAILED)
+    }
+}
+
+async function parseEssXQueryLevels(serverResponse) {
+    if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
+        logger.log('[rconService] ' + serverResponse)
+        throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
+    }
+    const regexExp = /(?:level )([0-9]+)/
+
+    if (regexExp.test(serverResponse)) {
+        return parseInt(serverResponse.match(regexExp)[0])
+    } else {
+        logger.log('[rconService] Unexpected server response: ' + serverResponse)
+        throw Error(rconServiceErrorEnum.RCON_FAILED)
+    }
+}
+
+async function parseEssXQueryPoints(serverResponse) {
+    if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
+        logger.log('[rconService] ' + serverResponse)
+        throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
+    }
+    const regexExp = /(?:has )([0-9]+)/
+
+    if (regexExp.test(serverResponse)) {
+        return parseInt(serverResponse.match(regexExp)[0])
     } else {
         logger.log('[rconService] Unexpected server response: ' + serverResponse)
         throw Error(rconServiceErrorEnum.RCON_FAILED)
