@@ -17,7 +17,8 @@
     "chai": "^4.2.0",
     "mocha": "^10.1.0",
     "nyc": "^15.1.0",
-    "sinon": "^9.2.3"
+    "sinon": "^9.2.3",
+    "process": "0.11.10"
   },
   "scripts": {
     "test": "nyc mocha --recursive test/",
