@@ -10,7 +10,7 @@ async function queryXpLevels(rconClient, userId) {
     if (ESSENTIALS_X_ENABLED){
         cmdString = `xp show ${userId}`
     } else {
-        cmdString = `xp query ${userId} levels`
+        cmdString = `xp query ${userId} level`
     }
 
     await rconClient.authenticate(SERVER_RCON_PASS)
@@ -81,7 +81,7 @@ async function parseEssXQueryLevels(serverResponse) {
         logger.log('[rconService] ' + serverResponse)
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
     }
-    const regexExp = /(?:level )([0-9]+)/
+    const regexExp = /level.{1,4}?([0-9]+)/
 
     if (regexExp.test(serverResponse)) {
         return parseInt(serverResponse.match(regexExp)[1])
@@ -96,7 +96,7 @@ async function parseEssXQueryPoints(serverResponse) {
         logger.log('[rconService] ' + serverResponse)
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
     }
-    const regexExp = /(?:has )([0-9]+)/
+    const regexExp = /has.{1,4}?([0-9]+)/
 
     if (regexExp.test(serverResponse)) {
         return parseInt(serverResponse.match(regexExp)[1])
