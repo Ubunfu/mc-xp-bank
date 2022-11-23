@@ -2,7 +2,7 @@ const rconServiceErrorEnum = require('../enums/rconServiceErrorEnum.js')
 const logger = require('../util/logger.js')
 
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
-// ESSENTIALS_X = false /* Manual override for testing */
+// ESSENTIALS_X_ENABLED = true /* HACK Manual override for testing */
 const ESSENTIALS_X_ENABLED = Boolean(process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN)
 
 async function queryXpLevels(rconClient, userId) {
@@ -49,20 +49,42 @@ async function queryXpPoints(rconClient, userId) {
 }
 
 async function removeXpPoints(rconClient, userId, amount) {
-    const cmdString = `xp add ${userId} -${amount} points`
+    var cmdString = ''
+    if (ESSENTIALS_X_ENABLED){
+        cmdString = `xp give ${userId} -${amount}`
+    } else {
+        cmdString = `xp add ${userId} -${amount} points`
+    }
+
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
-    await parseRemoveXpPointsResp(serverResp)
+
+    if (ESSENTIALS_X_ENABLED){
+        await parseRemoveXpEssXResp(serverResp)
+    } else {
+        await parseRemoveXpPointsResp(serverResp)
+    }
 }
 
 async function addXpPoints(rconClient, userId, amount) {
-    const cmdString = `xp add ${userId} ${amount} points`
+    var cmdString = ''
+    if (ESSENTIALS_X_ENABLED){
+        cmdString = `xp give ${userId} ${amount}`
+    } else {
+        cmdString = `xp add ${userId} ${amount} points`
+    }
+
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
-    await parseAddXpPointsResp(serverResp)
+    if (ESSENTIALS_X_ENABLED){
+        await parseAddXpEssXResp(serverResp)
+    } else {
+        await parseAddXpPointsResp(serverResp)
+    }
 }
+
 
 async function parseQueryResp(serverResponse) {
     if (serverResponse == rconServiceErrorEnum.NO_PLAYER_FOUND) {
@@ -118,6 +140,15 @@ async function parseAddXpPointsResp(serverResponse) {
         logger.log('[rconService] ' + serverResponse)
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
     }
+}
+
+
+async function parseAddXpEssXResp(serverResp){
+    // TODO Parse EssentialsX Response
+}
+
+async function parseRemoveXpEssXResp(serverResp){
+    // TODO Parse EssentialsX Response
 }
 
 exports.queryXpLevels = queryXpLevels
