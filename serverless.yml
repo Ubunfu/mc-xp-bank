@@ -22,7 +22,7 @@ provider:
     TABLE_XP: #${env:TABLE_XP}
       Ref:
         - XpDatabase
-    ESSENTIALS_X: ${env:ESSENTIALS_X}
+    FEATURE_ENABLED_ESSENTIALS_X_PLUGIN: ${env:FEATURE_ENABLED_ESSENTIALS_X_PLUGIN}
 
 functions:
   teller:

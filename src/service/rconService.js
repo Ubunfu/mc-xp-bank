@@ -3,11 +3,11 @@ const logger = require('../util/logger.js')
 
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
 // ESSENTIALS_X = false /* Manual override for testing */
-const ESSENTIALS_X = process.env.ESSENTIALS_X
+const ESSENTIALS_X_ENABLED = Boolean(process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN)
 
 async function queryXpLevels(rconClient, userId) {
     cmdString = ''
-    if (ESSENTIALS_X == true){
+    if (ESSENTIALS_X_ENABLED){
         cmdString = `xp show ${userId}`
     } else {
         cmdString = `xp query ${userId} levels`
@@ -18,7 +18,7 @@ async function queryXpLevels(rconClient, userId) {
     rconClient.disconnect()
 
     levels = 0
-    if (ESSENTIALS_X == true){
+    if (ESSENTIALS_X_ENABLED){
         levels = await parseEssXQueryLevels(serverResp)
     } else {
         levels = await parseQueryResp(serverResp)
@@ -29,7 +29,7 @@ async function queryXpLevels(rconClient, userId) {
 
 async function queryXpPoints(rconClient, userId) {
     cmdString = ''
-    if (ESSENTIALS_X == true){
+    if (ESSENTIALS_X_ENABLED){
         cmdString = `xp show ${userId}`
     } else {
         cmdString = `xp query ${userId} points`
@@ -39,7 +39,7 @@ async function queryXpPoints(rconClient, userId) {
     rconClient.disconnect()
 
     points = 0
-    if (ESSENTIALS_X == true){
+    if (ESSENTIALS_X_ENABLED){
         points = await parseEssXQueryPoints(serverResp)
     } else {
         points = await parseQueryResp(serverResp)

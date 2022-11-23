@@ -2,7 +2,6 @@ const rconService = require('../../src/service/rconService.js')
 const rconServiceErrorEnum = require('../../src/enums/rconServiceErrorEnum.js')
 const expect = require('chai').expect
 const sinon = require('sinon')
-const process = require('process')
 
 const USER_ID = 'player'
 const XP_POINTS = 100
@@ -121,7 +120,7 @@ describe('rconService: queryXpLevels:', function() {
 })
 
 describe('rconService: queryEssX____:', function() {
-    process.env.ESSENTIALS_X = true
+    process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN = 'true'
     describe('When EssentialsX player levels are returned', function() {
         it('Returns player levels count', async function() {
             const rconClientMock = {
