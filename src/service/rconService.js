@@ -60,11 +60,7 @@ async function removeXpPoints(rconClient, userId, amount) {
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
 
-    if (ESSENTIALS_X_ENABLED){
-        await parseRemoveXpEssXResp(serverResp)
-    } else {
-        await parseRemoveXpPointsResp(serverResp)
-    }
+    await parseRemoveXpPointsResp(serverResp)
 }
 
 async function addXpPoints(rconClient, userId, amount) {
@@ -78,11 +74,7 @@ async function addXpPoints(rconClient, userId, amount) {
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
-    if (ESSENTIALS_X_ENABLED){
-        await parseAddXpEssXResp(serverResp)
-    } else {
-        await parseAddXpPointsResp(serverResp)
-    }
+    await parseAddXpPointsResp(serverResp)
 }
 
 
@@ -142,14 +134,6 @@ async function parseAddXpPointsResp(serverResponse) {
     }
 }
 
-
-async function parseAddXpEssXResp(serverResp){
-    // TODO Parse EssentialsX Response
-}
-
-async function parseRemoveXpEssXResp(serverResp){
-    // TODO Parse EssentialsX Response
-}
 
 exports.queryXpLevels = queryXpLevels
 exports.queryXpPoints = queryXpPoints

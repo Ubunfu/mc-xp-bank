@@ -144,38 +144,4 @@ describe('rconService: EssentialsX version:', function() {
             expect(rconServiceResp).to.be.equal(117)
         })
     })
-
-    describe('When EssentialsX player XP is added', function() {
-
-        it('Returns player levels count', async function() {
-        /*
-        // TODO Stub add XP client
-            const rconClientMock = {
-                authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_ESSX),
-                disconnect: sinon.stub().returns()
-            }
-            const rconServiceResp = await rconService.addXpPoints(rconClientMock, USER_ID, XP_POINTS)
-            // TODO Assert response
-            expect(rconServiceResp).to.be.equal(8)
-        */
-       expect(true).to.be.true
-        })
-    })
-    describe('When EssentialsX player XP is removed', function() {
-        it('Returns player levels count', async function() {
-        /*
-            TODO Stub remove XP client
-            const rconClientMock = {
-                authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_ESSX),
-                disconnect: sinon.stub().returns()
-            }
-            const rconServiceResp = await rconService.removeXpPoints(rconClientMock, USER_ID, XP_POINTS)
-            TODO Assert response
-            expect(rconServiceResp).to.be.equal(8)
-        */
-       expect(true).to.be.true
-        })
-    })
 })
