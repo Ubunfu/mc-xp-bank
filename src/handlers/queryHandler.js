@@ -22,10 +22,12 @@ async function handle(event) {
 
 async function getPlayerXp(userId) {
     logger.log(`[queryHandler] Querying XP for ${userId}`)
+    if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true') {
+        return await rconService.queryXpPoints(rconClient, userId)
+    }
     const playerLevels = await rconService.queryXpLevels(rconClient, userId)
     const playerPoints = await rconService.queryXpPoints(rconClient, userId)
     return await xpCalculatorService.calculatePoints(playerLevels, playerPoints)
-    
 }
 
 exports.handle = handle;

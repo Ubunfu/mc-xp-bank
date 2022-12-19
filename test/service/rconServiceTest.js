@@ -123,26 +123,17 @@ describe('rconService: EssentialsX version:', function() {
     beforeEach(function () {
         process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN = 'true'
     })
-    describe('When EssentialsX player levels are returned', function() {
-        it('Returns player levels count', async function() {
-            const rconClientMock = {
-                authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_ESSX),
-                disconnect: sinon.stub().returns()
-            }
-            const rconServiceResp = await rconService.queryXpLevels(rconClientMock, USER_ID)
-            expect(rconServiceResp).to.be.equal(8)
-        })
-    })
-    describe('When EssentialsX player points are returned', function() {
-        it('Returns player points count', async function() {
-            const rconClientMock = {
-                authenticate: sinon.stub().returns(),
-                execute: sinon.stub().returns(RESP_ESSX),
-                disconnect: sinon.stub().returns()
-            }
-            const rconServiceResp = await rconService.queryXpPoints(rconClientMock, USER_ID)
-            expect(rconServiceResp).to.be.equal(117)
+    describe('queryXpPoints', function () {
+        describe('When EssentialsX player points are returned', function() {
+            it('Returns player points count', async function() {
+                const rconClientMock = {
+                    authenticate: sinon.stub().returns(),
+                    execute: sinon.stub().returns(RESP_ESSX),
+                    disconnect: sinon.stub().returns()
+                }
+                const rconServiceResp = await rconService.queryXpPoints(rconClientMock, USER_ID)
+                expect(rconServiceResp).to.be.equal(117)
+            })
         })
     })
 })

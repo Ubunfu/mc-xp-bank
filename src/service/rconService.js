@@ -4,23 +4,13 @@ const logger = require('../util/logger.js')
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
 
 async function queryXpLevels(rconClient, userId) {
-    cmdString = ''
-    if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true'){
-        cmdString = `xp show ${userId}`
-    } else {
-        cmdString = `xp query ${userId} level`
-    }
+    cmdString = 'xp query ${userId} level'
 
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
 
-    levels = 0
-    if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true'){
-        levels = await parseEssXQueryLevels(serverResp)
-    } else {
-        levels = await parseQueryResp(serverResp)
-    }
+    levels = await parseQueryResp(serverResp)
     logger.log(`[rconService] User ${userId} has ${levels} levels`)
     return levels
 }
@@ -82,21 +72,6 @@ async function parseQueryResp(serverResponse) {
         throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
     } else if (serverResponse.includes('experience')) {
         return parseInt(serverResponse.split(' ')[2])
-    } else {
-        logger.log('[rconService] Unexpected server response: ' + serverResponse)
-        throw Error(rconServiceErrorEnum.RCON_FAILED)
-    }
-}
-
-async function parseEssXQueryLevels(serverResponse) {
-    if (serverResponse === rconServiceErrorEnum.NO_PLAYER_FOUND) {
-        logger.log('[rconService] ' + serverResponse)
-        throw Error(rconServiceErrorEnum.NO_PLAYER_FOUND)
-    }
-    const regexExp = /level.{1,4}?([0-9]+)/
-
-    if (regexExp.test(serverResponse)) {
-        return parseInt(serverResponse.match(regexExp)[1])
     } else {
         logger.log('[rconService] Unexpected server response: ' + serverResponse)
         throw Error(rconServiceErrorEnum.RCON_FAILED)
