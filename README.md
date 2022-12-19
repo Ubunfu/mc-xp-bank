@@ -12,11 +12,12 @@ This service runs as an AWS lambda function.
 ## Configuration
 
 ### Environment Variables
-| Parameter          | Description                                                                       | Default | Required? |
-|--------------------|-----------------------------------------------------------------------------------|---------|-----------|
-| LOGGER_ENABLED     | Boolean value controlling writing of logs. Useful to turn off for test execution. | n/a     | Yes       |
-| SERVER_HOST        | Minecraft server hostname.                                                        | n/a     | Yes       |
-| SERVER_RCON_PORT   | Port on which RCON service is listening on the minecraft server.                  | n/a     | Yes       |
-| SERVER_RCON_PASS   | Password used to authenticate with the RCON service.                              | n/a     | Yes       |
-| SERVER_RCON_TIMEOUT_MS   | Timeout in milliseconds for connections to the RCON service.                | n/a     | Yes       |
-| TABLE_XP           | Name of the DynamoDB table containing XP account balances.                        | n/a     | Yes       |
+| Parameter                           | Description                                                                       | Default | Required? |
+|-------------------------------------|-----------------------------------------------------------------------------------|---------|-----------|
+| LOGGER_ENABLED                      | Boolean value controlling writing of logs. Useful to turn off for test execution. | n/a     | Yes       |
+| SERVER_HOST                         | Minecraft server hostname.                                                        | n/a     | Yes       |
+| SERVER_RCON_PORT                    | Port on which RCON service is listening on the minecraft server.                  | n/a     | Yes       |
+| SERVER_RCON_PASS                    | Password used to authenticate with the RCON service.                              | n/a     | Yes       |
+| SERVER_RCON_TIMEOUT_MS              | Timeout in milliseconds for connections to the RCON service.                      | n/a     | Yes       |
+| TABLE_XP                            | Name of the DynamoDB table containing XP account balances.                        | n/a     | Yes       |
+| FEATURE_ENABLED_ESSENTIALS_X_PLUGIN | Boolean indicating if the EssentialsX plugin is running on the minecraft server   | False   | No        |
