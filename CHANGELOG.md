@@ -1,6 +1,9 @@
 # Changelog
 This project attempts to conform to [SemVer](https://semver.org/) guidelines whenever possible.
 
+## [v1.1.0]
+* [Adding support for usage with servers running EssentialsX](https://github.com/Ubunfu/mc-xp-bank/pull/17)
+
 ## [v1.0.1]
 * [Updating packages and sls config](https://github.com/Ubunfu/mc-xp-bank/pull/13
 * [Updating packages](https://github.com/Ubunfu/mc-xp-bank/pull/14)

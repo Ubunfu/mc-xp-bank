@@ -8,7 +8,6 @@ const XP_POINTS = 100
 const RESP_QUERY_LEVELS = 'player has 10 experience levels'
 const RESP_QUERY_POINTS = 'player has 10 experience points'
 const RESP_UNEXPECTED = 'some crap'
-const RESP_ESSX_PLAIN = 'player has 117 exp (level 8) and needs 18 more exp to level up.'
 const RESP_ESSX = "B'cB'4.PLAYER B'6hasB'c 117 B'6exp (levelB'c 8B'6) and needsB'c 7 B'6more exp to level up."
 
 describe('rconService: addXpPoints:', function() {
@@ -121,7 +120,9 @@ describe('rconService: queryXpLevels:', function() {
 })
 
 describe('rconService: EssentialsX version:', function() {
-    process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN = 'true'
+    beforeEach(function () {
+        process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN = 'true'
+    })
     describe('When EssentialsX player levels are returned', function() {
         it('Returns player levels count', async function() {
             const rconClientMock = {
