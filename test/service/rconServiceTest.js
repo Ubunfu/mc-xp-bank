@@ -8,6 +8,7 @@ const XP_POINTS = 100
 const RESP_QUERY_LEVELS = 'player has 10 experience levels'
 const RESP_QUERY_POINTS = 'player has 10 experience points'
 const RESP_UNEXPECTED = 'some crap'
+const RESP_ESSX = "B'cB'4.PLAYER B'6hasB'c 117 B'6exp (levelB'c 8B'6) and needsB'c 7 B'6more exp to level up."
 
 describe('rconService: addXpPoints:', function() {
     describe('When no player is online', function() {
@@ -114,6 +115,25 @@ describe('rconService: queryXpLevels:', function() {
             }
             const rconServiceResp = await rconService.queryXpLevels(rconClientMock, USER_ID)
             expect(rconServiceResp).to.be.equal(10)
+        })
+    })
+})
+
+describe('rconService: EssentialsX version:', function() {
+    beforeEach(function () {
+        process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN = 'true'
+    })
+    describe('queryXpPoints', function () {
+        describe('When EssentialsX player points are returned', function() {
+            it('Returns player points count', async function() {
+                const rconClientMock = {
+                    authenticate: sinon.stub().returns(),
+                    execute: sinon.stub().returns(RESP_ESSX),
+                    disconnect: sinon.stub().returns()
+                }
+                const rconServiceResp = await rconService.queryXpPoints(rconClientMock, USER_ID)
+                expect(rconServiceResp).to.be.equal(117)
+            })
         })
     })
 })

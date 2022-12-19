@@ -14,7 +14,7 @@ provider:
   iam:
     role: arn:aws:iam::425071954352:role/service-role/mc-microservice-role
   environment:
-    LOGGER_ENABLED: true
+    LOGGER_ENABLED: ${env:LOGGER_ENABLED}
     SERVER_HOST: ${env:SERVER_HOST}
     SERVER_RCON_PORT: ${env:SERVER_RCON_PORT}
     SERVER_RCON_PASS: ${env:SERVER_RCON_PASS}
@@ -22,6 +22,7 @@ provider:
     TABLE_XP: #${env:TABLE_XP}
       Ref:
         - XpDatabase
+    FEATURE_ENABLED_ESSENTIALS_X_PLUGIN: ${env:FEATURE_ENABLED_ESSENTIALS_X_PLUGIN}
 
 functions:
   teller:
