@@ -4,19 +4,19 @@ const logger = require('../util/logger.js')
 const SERVER_RCON_PASS = process.env.SERVER_RCON_PASS
 
 async function queryXpLevels(rconClient, userId) {
-    cmdString = 'xp query ${userId} level'
+    const cmdString = 'xp query ${userId} level'
 
     await rconClient.authenticate(SERVER_RCON_PASS)
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
 
-    levels = await parseQueryResp(serverResp)
+    const levels = await parseQueryResp(serverResp)
     logger.log(`[rconService] User ${userId} has ${levels} levels`)
     return levels
 }
 
 async function queryXpPoints(rconClient, userId) {
-    cmdString = ''
+    let cmdString = ''
     if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true'){
         cmdString = `xp show ${userId}`
     } else {
@@ -26,7 +26,7 @@ async function queryXpPoints(rconClient, userId) {
     const serverResp = await rconClient.execute(cmdString)
     rconClient.disconnect()
 
-    points = 0
+    let points = 0
     if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true'){
         points = await parseEssXQueryPoints(serverResp)
     } else {
@@ -37,7 +37,7 @@ async function queryXpPoints(rconClient, userId) {
 }
 
 async function removeXpPoints(rconClient, userId, amount) {
-    var cmdString = ''
+    let cmdString = ''
     if (process.env.FEATURE_ENABLED_ESSENTIALS_X_PLUGIN === 'true'){
         cmdString = `xp give ${userId} -${amount}`
     } else {
